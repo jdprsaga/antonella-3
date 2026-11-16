@@ -4,30 +4,43 @@
 
   // Pastel paper colors, weighted toward pink (Antonella's favorite).
   var PALETTE = [
-    { wing: "#f7b9cf", inner: "#fbdbe6", body: "#b9708c" },
-    { wing: "#f4a5c0", inner: "#fad0de", body: "#a85a78" },
-    { wing: "#fbc9d9", inner: "#fde7ee", body: "#c07c95" },
-    { wing: "#f6b3c4", inner: "#fcdde5", body: "#b36b80" },
-    { wing: "#dcc6f0", inner: "#efe4f8", body: "#8d72a8" },
-    { wing: "#c9e3f2", inner: "#e6f2f9", body: "#6f93a8" },
-    { wing: "#ffdcb8", inner: "#fff0e0", body: "#b8875a" },
-    { wing: "#cfeedd", inner: "#e9f8ef", body: "#6f9c84" },
+    { wing: "#f7b9cf", inner: "#fbdbe6", edge: "#de93ae", body: "#b9708c" },
+    { wing: "#f4a5c0", inner: "#fad0de", edge: "#d9809f", body: "#a85a78" },
+    { wing: "#fbc9d9", inner: "#fde7ee", edge: "#e5a5bb", body: "#c07c95" },
+    { wing: "#f6b3c4", inner: "#fcdde5", edge: "#de8ea3", body: "#b36b80" },
+    { wing: "#dcc6f0", inner: "#efe4f8", edge: "#b9a0d6", body: "#8d72a8" },
+    { wing: "#c9e3f2", inner: "#e6f2f9", edge: "#9fc3d8", body: "#6f93a8" },
+    { wing: "#ffdcb8", inner: "#fff0e0", edge: "#e8b98a", body: "#b8875a" },
+    { wing: "#cfeedd", inner: "#e9f8ef", edge: "#a6d3ba", body: "#6f9c84" },
   ];
   var PINK_WEIGHT = 0.65; // share of butterflies drawn from the first four (pink) colors
 
+  var UPPER = "M0 22 C4 6 22 -2 36 4 C42 8 37 20 24 24 C14 26 6 25 0 24Z";
+  var LOWER = "M0 25 C8 27 22 30 24 40 C25 48 14 50 8 44 C3 39 1 31 0 27Z";
+  var UPPER_INNER = "M3 21 C8 11 20 6 30 8 C33 11 28 18 20 21 C12 22 7 22 3 22Z";
+  var LOWER_INNER = "M2 27 C9 29 18 32 19 39 C19 44 13 45 9 41 C5 37 3 32 2 28Z";
+
   // Right-hand wing pair; the body sits on the left edge (x = 0). The left wing reuses it mirrored.
+  // Built like layered card stock: a darker offset copy reads as the paper's cut edge (thickness),
+  // the inner panel is a second sheet glued on top, and #paperGrain adds fibrous texture.
   function wingSVG(c) {
     return (
       '<svg viewBox="0 0 40 50" aria-hidden="true">' +
-        // upper wing
-        '<path d="M0 22 C4 6 22 -2 36 4 C42 8 37 20 24 24 C14 26 6 25 0 24Z" fill="' + c.wing + '"/>' +
-        '<path d="M3 21 C8 11 20 6 30 8 C33 11 28 18 20 21 C12 22 7 22 3 22Z" fill="' + c.inner + '"/>' +
-        // lower wing
-        '<path d="M0 25 C8 27 22 30 24 40 C25 48 14 50 8 44 C3 39 1 31 0 27Z" fill="' + c.wing + '"/>' +
-        '<path d="M2 27 C9 29 18 32 19 39 C19 44 13 45 9 41 C5 37 3 32 2 28Z" fill="' + c.inner + '"/>' +
-        // paper sheen + crease lines
-        '<path d="M0 22 C4 6 22 -2 36 4 C42 8 37 20 24 24 C14 26 6 25 0 24Z M0 25 C8 27 22 30 24 40 C25 48 14 50 8 44 C3 39 1 31 0 27Z" fill="url(#paperSheen)"/>' +
-        '<path d="M0 23 L33 6 M0 26 L18 42" stroke="#fff" stroke-opacity="0.6" stroke-width="0.7" fill="none"/>' +
+        // cut edge of the card stock, peeking out below/right
+        '<g transform="translate(0.7 1.1)" fill="' + c.edge + '"><path d="' + UPPER + '"/><path d="' + LOWER + '"/></g>' +
+        '<g filter="url(#paperGrain)">' +
+          '<path d="' + UPPER + '" fill="' + c.wing + '"/>' +
+          '<path d="' + LOWER + '" fill="' + c.wing + '"/>' +
+          // shadow under the glued-on inner layer, then the layer itself
+          '<g transform="translate(0.4 0.7)" fill="' + c.edge + '" opacity="0.45"><path d="' + UPPER_INNER + '"/><path d="' + LOWER_INNER + '"/></g>' +
+          '<path d="' + UPPER_INNER + '" fill="' + c.inner + '"/>' +
+          '<path d="' + LOWER_INNER + '" fill="' + c.inner + '"/>' +
+        "</g>" +
+        // light catching the top edge, sheen, and crease lines
+        '<path d="' + UPPER + " " + LOWER + '" fill="url(#paperSheen)"/>' +
+        '<path d="M2 21 C6 7 22 -1 35 4.5" stroke="#fff" stroke-opacity="0.7" stroke-width="0.6" fill="none" stroke-linecap="round"/>' +
+        '<path d="M0 23 L33 6 M0 26 L18 42" stroke="#fff" stroke-opacity="0.55" stroke-width="0.7" fill="none"/>' +
+        '<path d="M0.4 23.4 L33.4 6.4 M0.4 26.4 L18.4 42.4" stroke="' + c.edge + '" stroke-opacity="0.35" stroke-width="0.5" fill="none"/>' +
       "</svg>"
     );
   }
