@@ -2,7 +2,7 @@
 (function () {
   "use strict";
 
-  // Pastel paper colors, weighted toward pink (Antonella's favorite).
+  // Pastel paper colors: four pink shades, then lilac, blue, peach, mint.
   var PALETTE = [
     { wing: "#f7b9cf", inner: "#fbdbe6", edge: "#de93ae", body: "#b9708c" },
     { wing: "#f4a5c0", inner: "#fad0de", edge: "#d9809f", body: "#a85a78" },
@@ -13,7 +13,7 @@
     { wing: "#ffdcb8", inner: "#fff0e0", edge: "#e8b98a", body: "#b8875a" },
     { wing: "#cfeedd", inner: "#e9f8ef", edge: "#a6d3ba", body: "#6f9c84" },
   ];
-  var PINK_WEIGHT = 0.65; // share of butterflies drawn from the first four (pink) colors
+  var PINK_WEIGHT = 0.2; // share drawn from the pink shades; 0.2 gives all five colors an equal share
 
   var UPPER = "M0 22 C4 6 22 -2 36 4 C42 8 37 20 24 24 C14 26 6 25 0 24Z";
   var LOWER = "M0 25 C8 27 22 30 24 40 C25 48 14 50 8 44 C3 39 1 31 0 27Z";
