@@ -41,6 +41,7 @@
       privacyTitle: "Your privacy",
       privacyText: "This is our family's personal website, not a company's. What you share here goes only to our private family spreadsheet, is used just to plan the party and prepare the children's keepsakes, and is never sold or shared.",
       footer: "With love, {name}'s family",
+      music: "Music",
     },
     es: {
       title: "{name} cumple {age}",
@@ -79,6 +80,7 @@
       privacyTitle: "Tu privacidad",
       privacyText: "Este es el sitio personal de nuestra familia, no de una empresa. Lo que compartas aquí llega solo a nuestra hoja de cálculo familiar privada, se usa únicamente para organizar la fiesta y preparar los recuerditos de los niños, y nunca se vende ni se comparte.",
       footer: "Con cariño, la familia de {name}",
+      music: "Música",
     },
   };
 
