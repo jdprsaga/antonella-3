@@ -2,18 +2,24 @@
 (function () {
   "use strict";
 
-  // Pastel paper colors: four pink shades, then lilac, blue, peach, mint.
+  // Pastel paper colors. The flock is always 15 butterflies: three of each color.
   var PALETTE = [
-    { wing: "#f7b9cf", inner: "#fbdbe6", edge: "#de93ae", body: "#b9708c" },
-    { wing: "#f4a5c0", inner: "#fad0de", edge: "#d9809f", body: "#a85a78" },
-    { wing: "#fbc9d9", inner: "#fde7ee", edge: "#e5a5bb", body: "#c07c95" },
-    { wing: "#f6b3c4", inner: "#fcdde5", edge: "#de8ea3", body: "#b36b80" },
+    { wing: "#f7b9cf", inner: "#fbdbe6", edge: "#de93ae", body: "#b9708c" }, // pink
+    { wing: "#f4a5c0", inner: "#fad0de", edge: "#d9809f", body: "#a85a78" }, // pink (a touch deeper)
+    { wing: "#fbc9d9", inner: "#fde7ee", edge: "#e5a5bb", body: "#c07c95" }, // pink (a touch lighter)
+    { wing: "#dcc6f0", inner: "#efe4f8", edge: "#b9a0d6", body: "#8d72a8" }, // lilac
     { wing: "#dcc6f0", inner: "#efe4f8", edge: "#b9a0d6", body: "#8d72a8" },
+    { wing: "#dcc6f0", inner: "#efe4f8", edge: "#b9a0d6", body: "#8d72a8" },
+    { wing: "#c9e3f2", inner: "#e6f2f9", edge: "#9fc3d8", body: "#6f93a8" }, // blue
     { wing: "#c9e3f2", inner: "#e6f2f9", edge: "#9fc3d8", body: "#6f93a8" },
+    { wing: "#c9e3f2", inner: "#e6f2f9", edge: "#9fc3d8", body: "#6f93a8" },
+    { wing: "#ffdcb8", inner: "#fff0e0", edge: "#e8b98a", body: "#b8875a" }, // peach
     { wing: "#ffdcb8", inner: "#fff0e0", edge: "#e8b98a", body: "#b8875a" },
+    { wing: "#ffdcb8", inner: "#fff0e0", edge: "#e8b98a", body: "#b8875a" },
+    { wing: "#cfeedd", inner: "#e9f8ef", edge: "#a6d3ba", body: "#6f9c84" }, // mint
+    { wing: "#cfeedd", inner: "#e9f8ef", edge: "#a6d3ba", body: "#6f9c84" },
     { wing: "#cfeedd", inner: "#e9f8ef", edge: "#a6d3ba", body: "#6f9c84" },
   ];
-  var PINK_WEIGHT = 0.2; // share drawn from the pink shades; 0.2 gives all five colors an equal share
 
   var UPPER = "M0 22 C4 6 22 -2 36 4 C42 8 37 20 24 24 C14 26 6 25 0 24Z";
   var LOWER = "M0 25 C8 27 22 30 24 40 C25 48 14 50 8 44 C3 39 1 31 0 27Z";
@@ -45,14 +51,6 @@
     );
   }
 
-  function pickColor() {
-    var pinks = 4;
-    var i = Math.random() < PINK_WEIGHT
-      ? Math.floor(Math.random() * pinks)
-      : pinks + Math.floor(Math.random() * (PALETTE.length - pinks));
-    return PALETTE[i];
-  }
-
   function rand(a, b) { return a + Math.random() * (b - a); }
 
   var layer = document.getElementById("butterflies");
@@ -61,11 +59,10 @@
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var W = window.innerWidth;
   var H = window.innerHeight;
-  var count = Math.max(7, Math.min(14, Math.round((W * H) / 38000)));
   var flock = [];
 
-  for (var i = 0; i < count; i++) {
-    var c = pickColor();
+  for (var i = 0; i < PALETTE.length; i++) {
+    var c = PALETTE[i];
     var size = rand(56, 82); // wingspan in px
     var el = document.createElement("div");
     el.className = "bf";
