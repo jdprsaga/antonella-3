@@ -58,7 +58,7 @@
 
   for (var i = 0; i < PALETTE.length; i++) {
     var c = PALETTE[i];
-    var size = rand(56, 82); // wingspan in px
+    var size = rand(46, 68); // wingspan in px
     var el = document.createElement("div");
     el.className = "bf";
     el.style.setProperty("--s", size + "px");
