@@ -2,22 +2,17 @@
 (function () {
   "use strict";
 
-  // Pastel paper colors. The flock is always 15 butterflies: three of each color.
+  // Pastel paper colors. The flock is always 10 butterflies: two of each color.
   var PALETTE = [
     { wing: "#f7b9cf", inner: "#fbdbe6", edge: "#de93ae", body: "#b9708c" }, // pink
     { wing: "#f4a5c0", inner: "#fad0de", edge: "#d9809f", body: "#a85a78" }, // pink (a touch deeper)
-    { wing: "#fbc9d9", inner: "#fde7ee", edge: "#e5a5bb", body: "#c07c95" }, // pink (a touch lighter)
     { wing: "#dcc6f0", inner: "#efe4f8", edge: "#b9a0d6", body: "#8d72a8" }, // lilac
-    { wing: "#dcc6f0", inner: "#efe4f8", edge: "#b9a0d6", body: "#8d72a8" },
     { wing: "#dcc6f0", inner: "#efe4f8", edge: "#b9a0d6", body: "#8d72a8" },
     { wing: "#c9e3f2", inner: "#e6f2f9", edge: "#9fc3d8", body: "#6f93a8" }, // blue
     { wing: "#c9e3f2", inner: "#e6f2f9", edge: "#9fc3d8", body: "#6f93a8" },
-    { wing: "#c9e3f2", inner: "#e6f2f9", edge: "#9fc3d8", body: "#6f93a8" },
     { wing: "#ffdcb8", inner: "#fff0e0", edge: "#e8b98a", body: "#b8875a" }, // peach
     { wing: "#ffdcb8", inner: "#fff0e0", edge: "#e8b98a", body: "#b8875a" },
-    { wing: "#ffdcb8", inner: "#fff0e0", edge: "#e8b98a", body: "#b8875a" },
     { wing: "#cfeedd", inner: "#e9f8ef", edge: "#a6d3ba", body: "#6f9c84" }, // mint
-    { wing: "#cfeedd", inner: "#e9f8ef", edge: "#a6d3ba", body: "#6f9c84" },
     { wing: "#cfeedd", inner: "#e9f8ef", edge: "#a6d3ba", body: "#6f9c84" },
   ];
 
