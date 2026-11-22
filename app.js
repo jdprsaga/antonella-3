@@ -7,7 +7,7 @@
     en: {
       title: "{name} is turning {age}",
       kicker: "Please join us to celebrate",
-      turning: "is turning",
+      turning: "turning",
       when: "When",
       where: "Where",
       maps: "Open in Google Maps",
@@ -45,8 +45,8 @@
     },
     es: {
       title: "{name} cumple {age}",
-      kicker: "Acompáñanos a celebrar",
-      turning: "cumple",
+      kicker: "Acompáñanos a celebrar a",
+      turning: "que cumple",
       when: "Cuándo",
       where: "Dónde",
       maps: "Abrir en Google Maps",
