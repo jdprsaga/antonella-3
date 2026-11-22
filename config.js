@@ -4,9 +4,11 @@ window.PARTY = {
   lastNames: "Perea Hurtado",
   age: 3,
 
+  // If you change the date, times or place, also update the two calendar files: party-en.ics, party-es.ics.
   date: "2027-01-10",      // YYYY-MM-DD
   startTime: "15:30",      // 24h "HH:MM". Leave empty to show "time to be announced".
   endTime: "18:00",        // optional
+  timeZone: "America/New_York",
 
   venue: "Evelyn Greer Park",
   address: "8200 SW 124th St, Pinecrest, FL 33156",

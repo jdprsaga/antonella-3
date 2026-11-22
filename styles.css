@@ -414,6 +414,9 @@ form .ink-button { display: block; margin: 8px auto 0; }
 
 .done { padding: 12px 0; }
 .done .big { font-style: italic; }
+.calendar { margin: 22px 0 18px; }
+.calendar-label { margin: 0 0 2px; font-size: 16px; color: var(--ink-soft); }
+.calendar .ink-button.small { margin: 8px 4px 0; padding: 10px 22px; min-height: 44px; font-size: 16px; }
 
 /* ---------- Footer ---------- */
 .folio { margin-top: 56px; font-size: 15px; font-style: italic; color: var(--ink-soft); }

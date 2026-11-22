@@ -29,6 +29,10 @@
       thanksYes: "Thank you, {who}! We can't wait to celebrate with you.",
       thanksNo: "Thank you for letting us know, {who}. You'll be missed!",
       another: "Send another response",
+      calTitle: "Add it to your calendar",
+      calApple: "iPhone",
+      calGoogle: "Google · Android",
+      calEvent: "{name}'s {age} birthday",
       errRequired: "Please fill in the highlighted fields.",
       errNotSetup: "RSVPs aren't open yet. Please check back soon.",
       errNetwork: "Something went wrong. Please try again, or contact {contact}.",
@@ -68,6 +72,10 @@
       thanksYes: "¡Gracias, {who}! Nos encantará celebrar contigo.",
       thanksNo: "Gracias por avisarnos, {who}. ¡Te vamos a extrañar!",
       another: "Enviar otra respuesta",
+      calTitle: "Agrégalo a tu calendario",
+      calApple: "iPhone",
+      calGoogle: "Google · Android",
+      calEvent: "Cumpleaños de {name} ({age} años)",
       errRequired: "Por favor completa los campos marcados.",
       errNotSetup: "Las confirmaciones aún no están abiertas. Vuelve pronto.",
       errNetwork: "Algo salió mal. Inténtalo de nuevo o contacta a {contact}.",
@@ -289,8 +297,34 @@
     lastDone = data;
     var first = data.adultName.split(/\s+/)[0];
     document.getElementById("done-text").textContent = t(data.attending ? "thanksYes" : "thanksNo", { who: first });
+    document.getElementById("calendar").hidden = !(data.attending && P.startTime);
+    document.getElementById("cal-apple").href = "party-" + lang + ".ics";
+    document.getElementById("cal-google").href = googleCalendarUrl();
     form.hidden = true;
     done.hidden = false;
+  }
+
+  // Google Calendar's "add event" page; on Android it opens in the Calendar app.
+  function googleCalendarUrl() {
+    var day = P.date.replace(/-/g, "");
+    var end = P.endTime || addHours(P.startTime, 2);
+    var stamp = function (hhmm) { return day + "T" + hhmm.replace(":", "") + "00"; };
+    return "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+      "&text=" + encodeURIComponent(t("calEvent", { name: P.firstName, age: lang === "en" ? ordinal(P.age) : P.age })) +
+      "&dates=" + stamp(P.startTime) + "/" + stamp(end) +
+      "&ctz=" + encodeURIComponent(P.timeZone) +
+      "&location=" + encodeURIComponent(P.venue + ", " + P.address) +
+      "&details=" + encodeURIComponent(location.href.split("#")[0]);
+  }
+
+  function ordinal(n) { // 3 → "3rd"
+    var s = ["th", "st", "nd", "rd"], v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  }
+
+  function addHours(hhmm, h) {
+    var p = hhmm.split(":").map(Number);
+    return ("0" + Math.min(23, p[0] + h)).slice(-2) + ":" + ("0" + (p[1] || 0)).slice(-2);
   }
 
   document.getElementById("rsvp-again").addEventListener("click", function () {

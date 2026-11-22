@@ -1,0 +1,21 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Antonella 3//Invitation//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:antonella-3-birthday-20270110@jdprsaga.github.io
+DTSTAMP:20261122T000000Z
+DTSTART:20270110T203000Z
+DTEND:20270110T230000Z
+SUMMARY:Antonella's 3rd birthday
+LOCATION:Evelyn Greer Park\, 8200 SW 124th St\, Pinecrest\, FL 33156
+DESCRIPTION:Invitation: https://jdprsaga.github.io/antonella-3/
+URL:https://jdprsaga.github.io/antonella-3/
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Antonella's birthday is tomorrow
+TRIGGER:-P1D
+END:VALARM
+END:VEVENT
+END:VCALENDAR
