@@ -13,9 +13,9 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Shared paper sheen used by every butterfly's wings -->
+  <!-- Paper sheen and grain for the butterfly wings (butterflies.js copies these into each wing) -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <defs>
+    <defs id="paper-defs">
       <linearGradient id="paperSheen" x1="0" y1="0" x2="1" y2="0.4">
         <stop offset="0" stop-color="#000" stop-opacity="0.07"/>
         <stop offset="0.35" stop-color="#fff" stop-opacity="0"/>
@@ -92,47 +92,50 @@
           <label class="pill"><input type="radio" name="attending" value="no"><span data-i18n="no"></span></label>
         </fieldset>
 
-        <div class="field">
-          <label for="adultName" data-i18n="adultName"></label>
-          <input id="adultName" name="adultName" type="text" autocomplete="name" maxlength="80" required>
-        </div>
-
-        <div class="field">
-          <label for="phone" data-i18n="phone"></label>
-          <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="30">
-        </div>
-
-        <div id="attending-fields" hidden>
-          <div class="counts">
-            <div class="stepper" data-name="adults" data-min="1" data-max="10" data-value="1">
-              <span class="stepper-label" data-i18n="adults"></span>
-              <div class="stepper-ctrl">
-                <button type="button" data-step="-1" aria-label="−">−</button>
-                <output></output>
-                <button type="button" data-step="1" aria-label="+">+</button>
-              </div>
-            </div>
-            <div class="stepper" data-name="children" data-min="0" data-max="8" data-value="1">
-              <span class="stepper-label" data-i18n="children"></span>
-              <div class="stepper-ctrl">
-                <button type="button" data-step="-1" aria-label="−">−</button>
-                <output></output>
-                <button type="button" data-step="1" aria-label="+">+</button>
-              </div>
-            </div>
+        <!-- Shown once they pick "will be there" or "can't make it" -->
+        <div id="rsvp-details" hidden>
+          <div class="field">
+            <label for="adultName" data-i18n="adultName"></label>
+            <input id="adultName" name="adultName" type="text" autocomplete="name" maxlength="80" required>
           </div>
 
-          <p class="hint" id="children-hint" data-i18n="childrenHint"></p>
-          <div id="children-list"></div>
-        </div>
+          <div class="field">
+            <label for="phone" data-i18n="phone"></label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="30">
+          </div>
 
-        <!-- Honeypot: left empty by people, filled by bots -->
-        <div class="hp" aria-hidden="true">
-          <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
-        </div>
+          <div id="attending-fields" hidden>
+            <div class="counts">
+              <div class="stepper" data-name="adults" data-min="1" data-max="10" data-value="1">
+                <span class="stepper-label" data-i18n="adults"></span>
+                <div class="stepper-ctrl">
+                  <button type="button" data-step="-1" aria-label="−">−</button>
+                  <output></output>
+                  <button type="button" data-step="1" aria-label="+">+</button>
+                </div>
+              </div>
+              <div class="stepper" data-name="children" data-min="0" data-max="8" data-value="1">
+                <span class="stepper-label" data-i18n="children"></span>
+                <div class="stepper-ctrl">
+                  <button type="button" data-step="-1" aria-label="−">−</button>
+                  <output></output>
+                  <button type="button" data-step="1" aria-label="+">+</button>
+                </div>
+              </div>
+            </div>
 
-        <p class="form-msg" id="form-msg" role="alert"></p>
-        <button class="ink-button" type="submit" id="submit-btn"><span data-i18n="submit"></span></button>
+            <p class="hint" id="children-hint" data-i18n="childrenHint"></p>
+            <div id="children-list"></div>
+          </div>
+
+          <!-- Honeypot: left empty by people, filled by bots -->
+          <div class="hp" aria-hidden="true">
+            <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+          </div>
+
+          <p class="form-msg" id="form-msg" role="alert"></p>
+          <button class="ink-button" type="submit" id="submit-btn"><span data-i18n="submit"></span></button>
+        </div>
       </form>
 
       <div id="rsvp-done" class="done" hidden>

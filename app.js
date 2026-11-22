@@ -168,6 +168,7 @@
   // ---------- RSVP form ----------
 
   var form = document.getElementById("rsvp-form");
+  var rsvpDetails = document.getElementById("rsvp-details");
   var attendingFields = document.getElementById("attending-fields");
   var childrenList = document.getElementById("children-list");
   var childrenHint = document.getElementById("children-hint");
@@ -232,6 +233,7 @@
 
   form.addEventListener("change", function (e) {
     if (e.target.name === "attending") {
+      rsvpDetails.hidden = false;
       attendingFields.hidden = e.target.value !== "yes";
       form.querySelector(".choice").classList.remove("invalid");
     }
@@ -296,6 +298,7 @@
     done.hidden = true;
     form.hidden = false;
     form.reset();
+    rsvpDetails.hidden = true;
     attendingFields.hidden = true;
     childrenList.querySelectorAll("input").forEach(function (i) { i.value = ""; });
     childrenList.querySelectorAll("select").forEach(function (s) { s.value = ""; });

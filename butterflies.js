@@ -26,7 +26,7 @@
   // the inner panel is a second sheet glued on top, and #paperGrain adds fibrous texture.
   function wingSVG(c) {
     return (
-      '<svg viewBox="0 0 40 50" aria-hidden="true">' +
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 50">' + DEFS +
         // cut edge of the card stock, peeking out below/right
         '<g transform="translate(0.7 1.1)" fill="' + c.edge + '"><path d="' + UPPER + '"/><path d="' + LOWER + '"/></g>' +
         '<g filter="url(#paperGrain)">' +
@@ -46,6 +46,16 @@
     );
   }
 
+  // Each wing is drawn once into an <img>, so flapping only turns a finished picture instead of
+  // re-running the paper-grain filter every frame. Images can't see the page's <defs>, so each
+  // wing carries its own copy.
+  var defsEl = document.getElementById("paper-defs");
+  var DEFS = defsEl ? defsEl.outerHTML : "";
+
+  function wingImg(c) {
+    return '<img alt="" src="data:image/svg+xml,' + encodeURIComponent(wingSVG(c)) + '">';
+  }
+
   function rand(a, b) { return a + Math.random() * (b - a); }
 
   var layer = document.getElementById("butterflies");
@@ -62,16 +72,16 @@
     var el = document.createElement("div");
     el.className = "bf";
     el.style.setProperty("--s", size + "px");
-    el.style.setProperty("--flap", rand(0.34, 0.56).toFixed(2) + "s");
-    el.style.setProperty("--delay", (-rand(0, 1)).toFixed(2) + "s");
     el.style.setProperty("--body", c.body);
     el.style.opacity = rand(0.75, 0.95).toFixed(2);
-    var svg = wingSVG(c);
-    el.innerHTML = '<div class="wing l">' + svg + '</div><div class="body"></div><div class="wing r">' + svg + "</div>";
+    var img = wingImg(c);
+    el.innerHTML = '<div class="wing l">' + img + '</div><div class="body"></div><div class="wing r">' + img + "</div>";
     layer.appendChild(el);
 
     flock.push({
       el: el,
+      wingL: el.firstChild,
+      wingR: el.lastChild,
       w: size,
       h: size * 0.625,
       x: rand(0, W),
@@ -82,10 +92,17 @@
       bobFreq: rand(1.5, 3),
       bobAmp: rand(2, 5),
       phase: rand(0, Math.PI * 2),
+      flap: rand(0.34, 0.56),        // seconds per downstroke
+      flapPhase: rand(0, Math.PI * 2),
     });
   }
 
-  function place(b, t) {
+  function place(b, t, still) {
+    // Wings swing between 8° (open) and 70° (nearly closed), easing at each end.
+    var open = still ? 8 : 39 - 31 * Math.cos((Math.PI * t) / b.flap + b.flapPhase);
+    b.wingL.style.transform = "rotateY(" + open.toFixed(1) + "deg)";
+    b.wingR.style.transform = "rotateY(" + (-open).toFixed(1) + "deg)";
+
     var bob = Math.sin(t * b.bobFreq + b.phase) * b.bobAmp;
     var tilt = Math.sin(t * b.bobFreq * 0.5 + b.phase) * 8;
     var deg = (b.heading * 180) / Math.PI + 90 + tilt; // artwork faces up
@@ -99,15 +116,22 @@
   });
 
   if (reduceMotion) {
-    flock.forEach(function (b) { place(b, 0); });
+    flock.forEach(function (b) { place(b, 0, true); });
     return;
   }
 
   var MARGIN = 60;
+  // 30 frames a second instead of the screen's 60+: the butterflies drift slowly, so it looks the
+  // same, and it roughly halves the CPU the page uses.
+  var FRAME_MS = 1000 / 30;
   var last = performance.now();
 
   function step(now) {
-    var dt = Math.min(0.05, (now - last) / 1000);
+    if (now - last < FRAME_MS - 4) {
+      requestAnimationFrame(step);
+      return;
+    }
+    var dt = Math.min(0.08, (now - last) / 1000);
     last = now;
     var t = now / 1000;
 
