@@ -16,7 +16,7 @@ window.PARTY = {
   contactPhoneDisplay: "(786) 271-4164",
 
   // Wish list link. Leave empty to show "coming soon".
-  registryUrl: "",
+  registryUrl: "https://www.amazon.com/hz/wishlist/ls/ORZQOIO8UR9A",
 
   // Google Apps Script web app URL (see README → "Connect RSVPs to Google Sheets").
   // Leave empty until set up; the form will tell guests RSVPs aren't open yet.
