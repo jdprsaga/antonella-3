@@ -1,11 +1,14 @@
-// Background song, looping. Browsers only allow sound after a tap, so it starts from the ♪ button.
-// The MP3 is fetched on the first tap (not on page load) and played through Web Audio, which loops
-// without a gap and can fade in and out on every phone (iOS ignores <audio> volume changes).
+// Background song, looping. On by default, except on iPhone/iPad, where it stays off until the guest
+// taps ♪ Music. Browsers block sound until the visitor taps or clicks something, so elsewhere the
+// song is loaded right away and starts on the first tap anywhere on the page.
+// Played through Web Audio, which loops without a gap and can fade on every phone (iOS ignores
+// <audio> volume changes). If a guest turns it off, that's remembered for their next visit.
 (function () {
   "use strict";
 
   var SRC = "HolidayJazzAntonella.mp3";
   var VOLUME = 0.6;
+  var PREF = "music"; // localStorage: "off" once the guest turns the music off
 
   var ctx = null;
   var out = null;
@@ -39,6 +42,8 @@
       .catch(function () { loading = false; });
   }
 
+  // Starts the loop. Before the first tap the audio clock is frozen, so the song and its
+  // fade-in simply wait and begin from the top once the browser allows sound.
   function begin() {
     if (!playing || source) return; // stopped while loading, or already running
     source = ctx.createBufferSource();
@@ -72,6 +77,12 @@
     setTimeout(function () { if (!playing) ctx.suspend(); }, 450);
   }
 
+  function savePref(on) {
+    try {
+      if (on) localStorage.removeItem(PREF); else localStorage.setItem(PREF, "off");
+    } catch (e) {}
+  }
+
   var button = document.getElementById("music-toggle");
   if (!button) return;
   if (!(window.AudioContext || window.webkitAudioContext) || !window.fetch) {
@@ -79,10 +90,48 @@
     return;
   }
 
+  function render() { button.setAttribute("aria-pressed", String(playing)); }
+
+  // Whether the guest has actually been able to hear the music yet. Until then the button shows
+  // "on", and tapping it starts the sound instead of turning it off.
+  var heard = false;
+  var GESTURES = ["pointerup", "touchend", "keydown"];
+
+  // Some touches (like the end of a scroll) don't count as a tap for the browser, so keep trying
+  // on each one until the audio is actually running.
+  function unlock(e) {
+    if (button.contains(e.target)) return; // the button's own click handles it
+    if (!playing || document.hidden) return;
+    resume(function () { heard = true; stopListening(); });
+  }
+  function resume(onRunning) {
+    var p = ctx.resume(); // older Safari returns nothing here
+    var check = function () { if (ctx.state === "running") onRunning(); };
+    if (p && p.then) p.then(check, function () {}); else check();
+  }
+  function stopListening() {
+    GESTURES.forEach(function (type) { document.removeEventListener(type, unlock, true); });
+  }
+
   button.addEventListener("click", function () {
-    if (playing) stop(); else start();
-    button.setAttribute("aria-pressed", String(playing));
+    if (playing && heard) stop(); else start();
+    heard = true;
+    stopListening();
+    savePref(playing);
+    render();
   });
+
+  // iPadOS reports itself as a Mac, so also check for a touch screen.
+  var iOS = /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+    (/Macintosh/.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+  var offByGuest = false;
+  try { offByGuest = localStorage.getItem(PREF) === "off"; } catch (e) {}
+  if (!offByGuest && !iOS) {
+    start(); // loads the song now; sound begins on the first tap (or right away if the browser allows)
+    render();
+    resume(function () { heard = true; stopListening(); });
+    GESTURES.forEach(function (type) { document.addEventListener(type, unlock, true); });
+  }
 
   // Don't keep playing in a background tab.
   document.addEventListener("visibilitychange", function () {

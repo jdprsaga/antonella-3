@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=1">
 </head>
 <body>
   <!-- Paper sheen and grain for the butterfly wings (butterflies.js copies these into each wing) -->
@@ -176,12 +176,13 @@
     </footer>
   </main>
 
-  <script src="config.js"></script>
-  <script src="vines.js"></script>
-  <script src="frames.js"></script>
-  <script src="glitter.js"></script>
-  <script src="butterflies.js"></script>
-  <script src="music.js"></script>
-  <script src="app.js"></script>
+  <!-- ?v= makes browsers fetch fresh copies after each publish: bump it whenever any of these files change -->
+  <script src="config.js?v=1"></script>
+  <script src="vines.js?v=1"></script>
+  <script src="frames.js?v=1"></script>
+  <script src="glitter.js?v=1"></script>
+  <script src="butterflies.js?v=1"></script>
+  <script src="music.js?v=2"></script>
+  <script src="app.js?v=1"></script>
 </body>
 </html>
