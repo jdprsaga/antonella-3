@@ -3,6 +3,10 @@
  * Paste into Extensions → Apps Script of your private Google Sheet, run `setup` once,
  * then Deploy → New deployment → Web app (Execute as: Me, Who has access: Anyone).
  * Full steps are in the README.
+ *
+ * Every RSVP is also emailed to the Google account that owns this script. To email other people
+ * too, add a Script Property NOTIFY_EMAIL (Project Settings → Script Properties) with their
+ * addresses, comma-separated. It lives there, not in this file, because this file is public.
  */
 
 var RSVP_SHEET = "RSVPs";
@@ -77,7 +81,46 @@ function doPost(e) {
   } finally {
     lock.releaseLock();
   }
+
+  // The RSVP is saved; a failed email must never turn that into an error for the guest.
+  try {
+    emailRsvp_(attending, name, phone, adults, kids);
+  } catch (err) {
+    console.error("RSVP email failed: " + err);
+  }
   return reply_({ ok: true });
+}
+
+// Subject e.g. "RSVP yes: Maria Lopez – 2 adults, 1 child" or "RSVP no: Juan Perez"
+function emailRsvp_(attending, name, phone, adults, kids) {
+  var owner = Session.getEffectiveUser().getEmail();
+  var extra = PropertiesService.getScriptProperties().getProperty("NOTIFY_EMAIL") || "";
+  var to = [owner].concat(extra.split(",")).map(function (a) { return a.trim(); }).filter(String).join(",");
+
+  var subject = attending
+    ? "RSVP yes: " + name + " – " + adults + (adults === 1 ? " adult" : " adults") +
+      (kids.length ? ", " + kids.length + (kids.length === 1 ? " child" : " children") : "")
+    : "RSVP no: " + name;
+  var lines = [
+    attending ? name + " is coming." : name + " can't make it.",
+    "",
+  ];
+  if (attending) {
+    lines.push("Adults: " + adults);
+    lines.push("Children: " + (kids.length
+      ? kids.map(function (k) { return k.name + (k.age ? " (" + k.age + ")" : ""); }).join(", ")
+      : "none"));
+  }
+  if (phone) lines.push("Phone: " + phone);
+  lines.push("", "Guest list: " + SpreadsheetApp.getActiveSpreadsheet().getUrl());
+
+  MailApp.sendEmail({ to: to, subject: subject, body: lines.join("\n"), name: "Antonella's RSVPs" });
+}
+
+// Run this once from the editor: it asks for the "send email as you" permission and sends a sample.
+function testEmail() {
+  emailRsvp_(true, "Test Guest", "", 2, [{ name: "Sofia", age: "3" }]);
+  console.log("Sent. Check your inbox (and spam, the first time).");
 }
 
 function doGet() {

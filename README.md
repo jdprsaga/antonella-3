@@ -39,6 +39,13 @@ Edit `config.js` (e.g. set `registryUrl`), then commit and push. GitHub Pages re
 Share the Sheet with your wife (Share → her email) so you can both review it. The **Summary** tab totals families,
 adults, children and declines; the **Children** tab is one row per child (name and age) for the souvenirs.
 
+### Email alert for every RSVP
+
+Each RSVP is emailed to the Google account that owns the script. To add more people, in Apps Script go to
+**Project Settings (⚙️) → Script Properties** and add `NOTIFY_EMAIL` with their addresses, comma-separated
+(keep them there, not in `Code.gs`: this repo is public). After pasting a new `Code.gs`, run **testEmail** once
+to approve the email permission, then redeploy as a new version (below).
+
 If you change `Code.gs` later: **Deploy → Manage deployments → Edit → Version: New version**. That keeps the same URL.
 
 ## Publish on GitHub Pages
