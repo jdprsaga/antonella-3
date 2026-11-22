@@ -121,20 +121,8 @@
   }
 
   var MARGIN = 60;
-  // 30 frames a second instead of the screen's 60+: the butterflies drift slowly, so it looks the
-  // same, and it roughly halves the CPU the page uses.
-  var FRAME_MS = 1000 / 30;
-  var last = performance.now();
 
-  function step(now) {
-    if (now - last < FRAME_MS - 4) {
-      requestAnimationFrame(step);
-      return;
-    }
-    var dt = Math.min(0.08, (now - last) / 1000);
-    last = now;
-    var t = now / 1000;
-
+  window.onFrame(function (dt, t) {
     for (var i = 0; i < flock.length; i++) {
       var b = flock[i];
 
@@ -164,8 +152,5 @@
 
       place(b, t);
     }
-    requestAnimationFrame(step);
-  }
-
-  requestAnimationFrame(step);
+  });
 })();
