@@ -20,5 +20,5 @@ window.PARTY = {
 
   // Google Apps Script web app URL (see README → "Connect RSVPs to Google Sheets").
   // Leave empty until set up; the form will tell guests RSVPs aren't open yet.
-  rsvpEndpoint: "",
+  rsvpEndpoint: "https://script.google.com/macros/s/AKfycbwVgzpHrMXfG4NfMlWod_GYQwXBCHvpxLHTllrSDondA5B8QfdSVKtnv5QUnEJxqjZn/exec",
 };

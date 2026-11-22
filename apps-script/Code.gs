@@ -9,6 +9,11 @@ var RSVP_SHEET = "RSVPs";
 var CHILD_SHEET = "Children";
 var SUMMARY_SHEET = "Summary";
 
+// Spam limits. The web app URL is public (the form needs it), so cap how many RSVPs it accepts.
+// Real guests never come close; raise these if the guest list is ever bigger.
+var MAX_PER_HOUR = 20;
+var MAX_TOTAL = 200;
+
 var RSVP_HEADERS = ["Received", "Attending", "Adult name", "Phone", "Adults", "Children", "Children (name · age)", "Language", "ID"];
 var CHILD_HEADERS = ["Received", "Child name", "Age", "Family (adult)", "Phone", "RSVP ID"];
 
@@ -59,6 +64,7 @@ function doPost(e) {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var rsvps = ensureSheet_(ss, RSVP_SHEET, RSVP_HEADERS);
     var children = ensureSheet_(ss, CHILD_SHEET, CHILD_HEADERS);
+    if (overLimit_(rsvps, now)) return reply_({ ok: false, error: "too_many" });
 
     rsvps.appendRow([
       now,
@@ -82,6 +88,16 @@ function doPost(e) {
 
 function doGet() {
   return reply_({ ok: true, service: "rsvp" });
+}
+
+// True once the sheet holds MAX_TOTAL RSVPs, or MAX_PER_HOUR arrived in the last hour.
+function overLimit_(sheet, now) {
+  var count = sheet.getLastRow() - 1; // minus the header row
+  if (count >= MAX_TOTAL) return true;
+  if (count < MAX_PER_HOUR) return false;
+  var recent = sheet.getRange(sheet.getLastRow() - MAX_PER_HOUR + 1, 1, MAX_PER_HOUR, 1).getValues();
+  var hourAgo = now.getTime() - 60 * 60 * 1000;
+  return recent.every(function (row) { return row[0] instanceof Date && row[0].getTime() > hourAgo; });
 }
 
 function ensureSheet_(ss, name, headers) {

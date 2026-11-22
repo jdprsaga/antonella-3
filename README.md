@@ -39,6 +39,9 @@ Edit `config.js` (e.g. set `registryUrl`), then commit and push. GitHub Pages re
 Share the Sheet with your wife (Share → her email) so you can both review it. The **Summary** tab totals families,
 adults, children and declines; the **Children** tab is one row per child (name and age) for the souvenirs.
 
+`Code.gs` accepts at most 20 RSVPs per hour and 200 in total (`MAX_PER_HOUR`, `MAX_TOTAL` at the top), so a
+spammer who finds the public URL can't flood the Sheet.
+
 If you change `Code.gs` later: **Deploy → Manage deployments → Edit → Version: New version**. That keeps the same URL.
 
 ## Publish on GitHub Pages
